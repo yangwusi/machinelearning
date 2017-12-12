@@ -21,10 +21,14 @@ import math
 # https://github.com/mattm/simple-neural-network/blob/master/neural-network.py
 
 class NeuralNetwork:
+    # 神经网络类
     LEARNING_RATE = 0.5
+
+    # 设置学习率为0.5
 
     def __init__(self, num_inputs, num_hidden, num_outputs, hidden_layer_weights=None, hidden_layer_bias=None,
                  output_layer_weights=None, output_layer_bias=None):
+        # 初始化一个三层神经网络结构
         self.num_inputs = num_inputs
 
         self.hidden_layer = NeuronLayer(num_hidden, hidden_layer_bias)
@@ -35,9 +39,10 @@ class NeuralNetwork:
 
     def init_weights_from_inputs_to_hidden_layer_neurons(self, hidden_layer_weights):
         weight_num = 0
-        for h in range(len(self.hidden_layer.neurons)):
-            for i in range(self.num_inputs):
+        for h in range(len(self.hidden_layer.neurons)):  # num_hidden,遍历隐藏层
+            for i in range(self.num_inputs):  # 遍历输入层
                 if not hidden_layer_weights:
+                    # 如果hidden_layer_weights的值为空,则利用随机化函数对其进行赋值,否则利用hidden_layer_weights中的值对其进行更新
                     self.hidden_layer.neurons[h].weights.append(random.random())
                 else:
                     self.hidden_layer.neurons[h].weights.append(hidden_layer_weights[weight_num])
@@ -45,15 +50,16 @@ class NeuralNetwork:
 
     def init_weights_from_hidden_layer_neurons_to_output_layer_neurons(self, output_layer_weights):
         weight_num = 0
-        for o in range(len(self.output_layer.neurons)):
-            for h in range(len(self.hidden_layer.neurons)):
+        for o in range(len(self.output_layer.neurons)):  # num_outputs,遍历输出层
+            for h in range(len(self.hidden_layer.neurons)):  # 遍历输出层
                 if not output_layer_weights:
+                    # 如果output_layer_weights的值为空,则利用随机化函数对其进行赋值,否则利用output_layer_weights中的值对其进行更新
                     self.output_layer.neurons[o].weights.append(random.random())
                 else:
                     self.output_layer.neurons[o].weights.append(output_layer_weights[weight_num])
                 weight_num += 1
 
-    def inspect(self):
+    def inspect(self):  # 输出神经网络信息
         print('------')
         print('* Inputs: {}'.format(self.num_inputs))
         print('------')
@@ -64,26 +70,27 @@ class NeuralNetwork:
         self.output_layer.inspect()
         print('------')
 
-    def feed_forward(self, inputs):
+    def feed_forward(self, inputs):  # 返回输出层y值
         hidden_layer_outputs = self.hidden_layer.feed_forward(inputs)
         return self.output_layer.feed_forward(hidden_layer_outputs)
 
     # Uses online learning, ie updating the weights after each training case
+    # 使用在线学习方式,训练每个实例之后对权值进行更新
     def train(self, training_inputs, training_outputs):
         self.feed_forward(training_inputs)
-
-        # 1. Output neuron deltas
+        # 反向传播
+        # 1. Output neuron deltas输出层deltas
         pd_errors_wrt_output_neuron_total_net_input = [0]*len(self.output_layer.neurons)
         for o in range(len(self.output_layer.neurons)):
-            # ∂E/∂zⱼ
+            # 对于输出层∂E/∂zⱼ=∂E/∂a*∂a/∂z=cost'(target_output)*sigma'(z)
             pd_errors_wrt_output_neuron_total_net_input[o] = self.output_layer.neurons[
                 o].calculate_pd_error_wrt_total_net_input(training_outputs[o])
 
-        # 2. Hidden neuron deltas
+        # 2. Hidden neuron deltas隐藏层deltas
         pd_errors_wrt_hidden_neuron_total_net_input = [0]*len(self.hidden_layer.neurons)
         for h in range(len(self.hidden_layer.neurons)):
-
             # We need to calculate the derivative of the error with respect to the output of each hidden layer neuron
+            # 我们需要计算误差对每个隐藏层神经元的输出的导数,由于不是输出层所以dE/dyⱼ需要根据下一层反向进行计算,即根据输出层的函数进行计算
             # dE/dyⱼ = Σ ∂E/∂zⱼ * ∂z/∂yⱼ = Σ ∂E/∂zⱼ * wᵢⱼ
             d_error_wrt_hidden_neuron_output = 0
             for o in range(len(self.output_layer.neurons)):
@@ -94,9 +101,10 @@ class NeuralNetwork:
             pd_errors_wrt_hidden_neuron_total_net_input[h] = d_error_wrt_hidden_neuron_output*self.hidden_layer.neurons[
                 h].calculate_pd_total_net_input_wrt_input()
 
-        # 3. Update output neuron weights
+        # 3. Update output neuron weights 更新输出层权重
         for o in range(len(self.output_layer.neurons)):
             for w_ho in range(len(self.output_layer.neurons[o].weights)):
+                # 注意:输出层权重是隐藏层神经元与输出层神经元连接的权重
                 # ∂Eⱼ/∂wᵢⱼ = ∂E/∂zⱼ * ∂zⱼ/∂wᵢⱼ
                 pd_error_wrt_weight = pd_errors_wrt_output_neuron_total_net_input[o]*self.output_layer.neurons[
                     o].calculate_pd_total_net_input_wrt_weight(w_ho)
@@ -104,9 +112,10 @@ class NeuralNetwork:
                 # Δw = α * ∂Eⱼ/∂wᵢ
                 self.output_layer.neurons[o].weights[w_ho] -= self.LEARNING_RATE*pd_error_wrt_weight
 
-        # 4. Update hidden neuron weights
+        # 4. Update hidden neuron weights 更新隐藏层权重
         for h in range(len(self.hidden_layer.neurons)):
             for w_ih in range(len(self.hidden_layer.neurons[h].weights)):
+                # 注意:隐藏层权重是输入层神经元与隐藏层神经元连接的权重
                 # ∂Eⱼ/∂wᵢ = ∂E/∂zⱼ * ∂zⱼ/∂wᵢ
                 pd_error_wrt_weight = pd_errors_wrt_hidden_neuron_total_net_input[h]*self.hidden_layer.neurons[
                     h].calculate_pd_total_net_input_wrt_weight(w_ih)
@@ -125,16 +134,21 @@ class NeuralNetwork:
 
 
 class NeuronLayer:
+    # 神经层类
     def __init__(self, num_neurons, bias):
 
-        # Every neuron in a layer shares the same bias
+        # Every neuron in a layer shares the same bias 一层中的所有神经元共享一个bias
         self.bias = bias if bias else random.random()
-
+        random.random()
+        # 生成0和1之间的随机浮点数float，它其实是一个隐藏的random.Random类的实例的random方法。
+        # random.random()和random.Random().random()作用是一样的。
         self.neurons = []
         for i in range(num_neurons):
             self.neurons.append(Neuron(self.bias))
+        # 在神经层的初始化函数中对每一层的bias赋值,利用神经元的init函数对神经元的bias赋值
 
     def inspect(self):
+        # print该层神经元的信息
         print('Neurons:', len(self.neurons))
         for n in range(len(self.neurons)):
             print(' Neuron', n)
@@ -143,6 +157,7 @@ class NeuronLayer:
             print('  Bias:', self.bias)
 
     def feed_forward(self, inputs):
+        # 前向传播过程outputs中存储的是该层每个神经元的y/a的值(经过神经元激活函数的值有时被称为y有时被称为a)
         outputs = []
         for neuron in self.neurons:
             outputs.append(neuron.calculate_output(inputs))
@@ -190,7 +205,7 @@ class Neuron:
     # δ = ∂E/∂zⱼ = ∂E/∂yⱼ * dyⱼ/dzⱼ 关键key
     #
     def calculate_pd_error_wrt_total_net_input(self, target_output):
-        return self.calculate_pd_error_wrt_output(target_output)*self.calculate_pd_total_net_input_wrt_input();
+        return self.calculate_pd_error_wrt_output(target_output)*self.calculate_pd_total_net_input_wrt_input()
 
     # The error for each neuron is calculated by the Mean Square Error method:
     # 每个神经元的误差由平均平方误差法计算
@@ -222,9 +237,10 @@ class Neuron:
         return self.output*(1 - self.output)
 
     # The total net input is the weighted sum of all the inputs to the neuron and their respective weights:
+    # 激活函数的输入是所有输入的加权权重的总和
     # = zⱼ = netⱼ = x₁w₁ + x₂w₂ ...
-    #
     # The partial derivative of the total net input with respective to a given weight (with everything else held constant) then is:
+    # 总的净输入与给定的权重的偏导数(其他所有的项都保持不变)
     # = ∂zⱼ/∂wᵢ = some constant + 1 * xᵢw₁^(1-0) + some constant ... = xᵢ
     def calculate_pd_total_net_input_wrt_weight(self, index):
         return self.inputs[index]
