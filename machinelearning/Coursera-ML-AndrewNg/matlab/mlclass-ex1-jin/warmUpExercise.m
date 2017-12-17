@@ -1,7 +1,7 @@
 function A = warmUpExercise()
 %WARMUPEXERCISE Example function in octave
 %   A = WARMUPEXERCISE() is an example function that returns the 5x5 identity matrix
-
+% warmupexercise函数是一个示例函数返回一个5*5的单位矩阵
 A = [];
 % ============= YOUR CODE HERE ==============
 % Instructions: Return the 5x5 identity matrix 

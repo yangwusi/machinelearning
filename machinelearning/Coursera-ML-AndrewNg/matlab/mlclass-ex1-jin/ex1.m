@@ -5,23 +5,25 @@
 % 
 %  This file contains code that helps you get started on the
 %  linear exercise. You will need to complete the following functions 
-%  in this exericse:
+%  in this exericse:完成这个练习中的以下函数
 %
-%     warmUpExercise.m
-%     plotData.m
-%     gradientDescent.m
-%     computeCost.m
-%     gradientDescentMulti.m
-%     computeCostMulti.m
-%     featureNormalize.m
+%     warmUpExercise.m 回顾练习
+%     plotData.m  显示数据
+%     gradientDescent.m  梯度下降
+%     computeCost.m  计算代价函数
+%     gradientDescentMulti.m  
+%     computeCostMulti.m  
+%     featureNormalize.m  特征标准化
 %     normalEqn.m
 %
 %  For this exercise, you will not need to change any code in this file,
 %  or any other files other than those mentioned above.
+%  在这个练习中你不用修改这个文件中的除了以上要求写出的函数的任何代码
 %
 % x refers to the population size in 10,000s
+% x指的是10000人的人口数量
 % y refers to the profit in $10,000s
-%
+% y指的是10000美元的利润
 
 %% Initialization
 clear ; close all; clc
@@ -47,7 +49,7 @@ m = length(y); % number of training examples
 plotData(X, y);
 
 fprintf('Program paused. Press enter to continue.\n');
-pause;
+
 
 %% =================== Part 3: Gradient descent ===================
 fprintf('Running Gradient Descent ...\n')
