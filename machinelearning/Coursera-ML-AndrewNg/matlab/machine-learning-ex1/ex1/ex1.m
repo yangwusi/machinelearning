@@ -7,14 +7,14 @@
 %  linear exercise. You will need to complete the following functions
 %  in this exericse:
 %
-%     warmUpExercise.m
-%     plotData.m
-%     gradientDescent.m
-%     computeCost.m
-%     gradientDescentMulti.m
-%     computeCostMulti.m
-%     featureNormalize.m
-%     normalEqn.m
+%     warmUpExercise.m 温习
+%     plotData.m 画出数据
+%     gradientDescent.m 梯度下降
+%     computeCost.m cost function
+%     gradientDescentMulti.m 多变量梯度下降
+%     computeCostMulti.m  多变量cost function
+%     featureNormalize.m 特征标准化
+%     normalEqn.m 正则方法
 %
 %  For this exercise, you will not need to change any code in this file,
 %  or any other files other than those mentioned above.
