@@ -13,11 +13,14 @@ figure; % open a new figure window
 %               as the x and y arguments of this function.
 %
 % Hint: You can use the 'rx' option with plot to have the markers
-%       appear as red crosses. Furthermore, you can make the
+%       appear as red crosses.
+%       你可以使用rx画出一条红线
+%       Furthermore, you can make the 
 %       markers larger by using plot(..., 'rx', 'MarkerSize', 10);
 
-
-
+plot(x, y, 'rx','MarkerSize', 10); % MarkerSize表示点的×的大小 
+ylabel('Profit in $ 10,000s');
+xlabel('Population of City in 10,000s');
 
 
 % ============================================================

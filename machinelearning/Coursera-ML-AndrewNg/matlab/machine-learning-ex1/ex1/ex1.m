@@ -1,4 +1,4 @@
-%% Machine Learning Online Class - Exercise 1: Linear Regression
+% Machine Learning Online Class - Exercise 1: Linear Regression
 
 %  Instructions
 %  ------------
@@ -7,20 +7,20 @@
 %  linear exercise. You will need to complete the following functions
 %  in this exericse:
 %
-%     warmUpExercise.m ��ϰ
-%     plotData.m ��������
-%     gradientDescent.m �ݶ��½�
-%     computeCost.m cost function
-%     gradientDescentMulti.m ������ݶ��½�
-%     computeCostMulti.m  �����cost function
-%     featureNormalize.m ������׼��
-%     normalEqn.m ���򷽷�
+%     warmUpExercise.m 温习
+%     plotData.m 显示数据
+%     gradientDescent.m 梯度下降
+%     computeCost.m 代价函数
+%     gradientDescentMulti.m 多变量梯度下降
+%     computeCostMulti.m  多变量代价函数
+%     featureNormalize.m 特征标准化
+%     normalEqn.m 正则方程法
 %
 %  For this exercise, you will not need to change any code in this file,
 %  or any other files other than those mentioned above.
 %
-% x refers to the population size in 10,000s
-% y refers to the profit in $10,000s
+% x refers to the population size in 10,000s (人口数量)
+% y refers to the profit in $10,000s (利润)
 %
 
 %% Initialization
@@ -55,8 +55,8 @@ X = [ones(m, 1), data(:,1)]; % Add a column of ones to x
 theta = zeros(2, 1); % initialize fitting parameters
 
 % Some gradient descent settings
-iterations = 1500;
-alpha = 0.01;
+iterations = 1500; % 设置迭代次数为1500次
+alpha = 0.01; % 设置学习率为0.01
 
 fprintf('\nTesting the cost function ...\n')
 % compute and display initial cost
@@ -83,12 +83,13 @@ fprintf('Expected theta values (approx)\n');
 fprintf(' -3.6303\n  1.1664\n\n');
 
 % Plot the linear fit
-hold on; % keep previous plot visible
+hold on; % keep previous plot visible 原先的图像保持可视化,即点阵图
 plot(X(:,2), X*theta, '-')
 legend('Training data', 'Linear regression')
-hold off % don't overlay any more plots on this figure
+hold off % don't overlay any more plots on this figure 不再对图像上的图片进行操作
 
 % Predict values for population sizes of 35,000 and 70,000
+% 预测当人口是35000和70000时城市的利润值
 predict1 = [1, 3.5] *theta;
 fprintf('For population = 35,000, we predict a profit of %f\n',...
     predict1*10000);
@@ -120,15 +121,37 @@ end
 
 % Because of the way meshgrids work in the surf command, we need to
 % transpose J_vals before calling surf, or else the axes will be flipped
+% 这个surf函数中的对[x,y]绑定的函数meshgrid函数有关,我们需要将J_vals在surf函数之前进行转置,
+% 否则我们的维数会颠倒.
+% 例如,对于surf(x, y, z=f(x,y));函数中的(x,y)来说,是由meshgrid函数绑定生成.
+% 此函数[x,y]=meshgrid(1:0.5:2,1:6).
+% x.shape=(6,3),y.shape=(6,3)
+% [X,Y] = meshgrid(1:0.5:2,1:6);
+% disp (X);
+%  1.0000   1.5000   2.0000
+%  1.0000   1.5000   2.0000
+%  1.0000   1.5000   2.0000
+%  1.0000   1.5000   2.0000
+%  1.0000   1.5000   2.0000
+%  1.0000   1.5000   2.0000
+% disp (Y);
+% 1   1   1
+% 1   1   1
+% 1   1   1
+% 1   1   1
+% 1   1   1
+% 1   1   1
+
 J_vals = J_vals';
-% Surface plot
+% Surface plot(曲面图)
 figure;
 surf(theta0_vals, theta1_vals, J_vals)
 xlabel('\theta_0'); ylabel('\theta_1');
 
-% Contour plot
+% Contour plot(等高线图)
 figure;
 % Plot J_vals as 15 contours spaced logarithmically between 0.01 and 100
+% 绘图的椭圆是15个等高线，在0.01到100之间分成20份
 contour(theta0_vals, theta1_vals, J_vals, logspace(-2, 3, 20))
 xlabel('\theta_0'); ylabel('\theta_1');
 hold on;
