@@ -9,7 +9,9 @@ function [X_norm, mu, sigma] = featureNormalize(X)
 % You need to set these values correctly
 X_norm = X;
 mu = zeros(1, size(X, 2));
+% size函数表示取X的第二个维度.mu.shape=(1,2)
 sigma = zeros(1, size(X, 2));
+% sigma.shape=(1,2)
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: First, for each feature dimension, compute the mean
@@ -27,7 +29,16 @@ sigma = zeros(1, size(X, 2));
 %               each feature. 
 %  注意对于数组X,每一个列是一个特征,每一行是一组训练数据.
 % Hint: You might find the 'mean' and 'std' functions useful.
-%       
+% Note:经试验matlab不支持矩阵广播 
+m = size(X,1);   
+mu = mean(X);
+for i = 1:m
+  X_norm=X[i,:] - mu;
+end
+
+sigma=std(X);
+for i =1:m
+  X_norm=X[i,:]-)/sigma; 
 
 
 
