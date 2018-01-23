@@ -22,7 +22,7 @@ clear ; close all; clc
 %% Load Data
 %  The first two columns contains the exam scores and the third column
 %  contains the label.
-
+% 读取数据，前两列包含两次考试的成绩，第三列包含标签
 data = load('ex2data1.txt');
 X = data(:, [1, 2]); y = data(:, 3);
 

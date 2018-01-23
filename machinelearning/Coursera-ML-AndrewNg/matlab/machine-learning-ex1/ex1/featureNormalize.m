@@ -5,13 +5,13 @@ function [X_norm, mu, sigma] = featureNormalize(X)
 %   is 1. This is often a good preprocessing step to do when
 %   working with learning algorithms.
 % 特征标准化会返回每个特征的平均值是0,标准差为1的特征.
-% mu表示平均自,sigma表示标准差
+% mu表示平均值,sigma表示标准差
 % You need to set these values correctly
 X_norm = X;
 mu = zeros(1, size(X, 2));
-% size函数表示取X的第二个维度.mu.shape=(1,2)
+% size函数表示取X的第二个维度.mu.shape=(1,m)
 sigma = zeros(1, size(X, 2));
-% sigma.shape=(1,2)
+% sigma.shape=(1,m)
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: First, for each feature dimension, compute the mean
@@ -21,7 +21,7 @@ sigma = zeros(1, size(X, 2));
 % Next, compute the standard deviation of each feature and divide
 %               each feature by it's standard deviation, storing
 %               the standard deviation in sigma.
-% 然后,对每一特征计算标准差,使用新的特征值处以标准差,并且把标准差记为sigma 
+% 然后,对每一特征计算标准差,使用新的特征值除以标准差,并且把标准差记为sigma 
 %
 %               Note that X is a matrix where each column is a 
 %               feature and each row is an example. You need 
@@ -30,15 +30,16 @@ sigma = zeros(1, size(X, 2));
 %  注意对于数组X,每一个列是一个特征,每一行是一组训练数据.
 % Hint: You might find the 'mean' and 'std' functions useful.
 % Note:经试验matlab不支持矩阵广播 
-m = size(X,1);   
+m = size(X , 1);
 mu = mean(X);
-for i = 1:m
-  X_norm=X[i,:] - mu;
+for i = 1 : m,
+	X_norm(i, :) = X(i , :) - mu;
 end
 
-sigma=std(X);
-for i =1:m
-  X_norm=X[i,:]-)/sigma; 
+sigma = std(X);
+for i = 1 : m,
+	X_norm(i, :) = X_norm(i, :) ./ sigma;
+end
 
 
 
@@ -51,3 +52,4 @@ for i =1:m
 % ============================================================
 
 end
+
